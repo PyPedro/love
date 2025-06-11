@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cartão de Amor ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ff4b6e;
+            --secondary-color: #ff758c;
+            --bg-color: #ffefef;
+            --light-pink: #ffd6e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--bg-color) 0%, var(--light-pink) 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .hearts-container {
+            width: 100%;
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 50px;
+            padding: 50px;
+            justify-items: center;
+            align-items: center;
+        }
+
+        .heart-wrapper {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }        .heart {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-color);
+            position: relative;
+            transform: rotate(-45deg);
+            cursor: pointer;
+            animation: float 3s ease-in-out infinite;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 5px 15px rgba(255, 75, 110, 0.3));
+        }
+
+        .heart.viewed {
+            background: var(--light-pink);
+            opacity: 0.7;
+            cursor: not-allowed;
+            animation: none;
+            transform: rotate(-45deg) scale(0.9);
+        }
+
+        .heart::before,
+        .heart::after {
+            transition: all 0.3s ease;
+        }
+
+        .heart.viewed::before,
+        .heart.viewed::after {
+            background: var(--light-pink);
+        }
+
+        .heart-tooltip {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .heart.viewed:hover .heart-tooltip {
+            opacity: 1;
+            visibility: visible;
+            bottom: -30px;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            width: 80px;
+            height: 80px;
+            background: inherit;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .heart::before {
+            top: -40px;
+            left: 0;
+        }
+
+        .heart::after {
+            top: 0;
+            left: 40px;
+        }
+
+        .heart:hover {
+            transform: rotate(-45deg) scale(1.2);
+            filter: drop-shadow(0 8px 20px rgba(255, 75, 110, 0.4));
+        }
+
+        @keyframes float {
+            0% {
+                transform: rotate(-45deg) translate(0, 0);
+            }
+            50% {
+                transform: rotate(-45deg) translate(0, -15px);
+            }
+            100% {
+                transform: rotate(-45deg) translate(0, 0);
+            }
+        }
+
+        .heart-wrapper:nth-child(3n) .heart {
+            animation-delay: -0.2s;
+            background: #ff758c;
+        }
+
+        .heart-wrapper:nth-child(3n+1) .heart {
+            animation-delay: -0.4s;
+            background: #ff4b6e;
+        }
+
+        .heart-wrapper:nth-child(3n+2) .heart {
+            animation-delay: -0.6s;
+            background: #ff8fa6;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }        .scratch-card {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .momento-unico {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            animation: fadeIn 1s ease;
+        }
+
+        .momento-texto {
+            font-family: 'Dancing Script', cursive;
+            font-size: 28px;
+            color: var(--primary-color);
+            margin: 15px 0;
+            line-height: 1.4;
+        }
+
+        .sparkles {
+            font-size: 24px;
+            margin: 10px 0;
+            animation: sparkle 2s infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .scratch-card-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            background: white;
+        }
+
+        .scratch-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            touch-action: none;
+        }
+
+        .scratch-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 18px;
+            text-align: center;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        @media (max-width: 768px) {
+            .heart {
+                width: 80px;
+                height: 80px;
+            }
+
+            .heart::before,
+            .heart::after {
+                width: 80px;
+                height: 80px;
+            }
+
+            .heart::before {
+                top: -40px;
+            }
+
+            .heart::after {
+                left: 40px;
+            }
+
+            .scratch-card {
+                width: 280px;
+                height: 380px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts-container">
+        {% for motivo in motivos %}            <div class="heart-wrapper">
+                <div class="heart {% if motivo.visualizado %}viewed{% endif %}" 
+                     data-id="{{ motivo.id }}" 
+                     data-has-image="{{ 'true' if motivo.imagem_url else 'false' }}" 
+                     data-viewed="{{ 'true' if motivo.visualizado else 'false' }}">
+                    {% if motivo.visualizado %}
+                    <div class="heart-tooltip">Momento único já vivido {{ motivo.data_visualizacao.strftime('%d/%m/%Y %H:%M') }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="modal" id="modal">
+        <button class="close-button" onclick="closeModal()">×</button>
+        <div class="scratch-card">
+            <div class="scratch-card-content" id="cardContent"></div>
+            <canvas class="scratch-overlay" id="scratchCanvas"></canvas>
+            <div class="scratch-text">Raspe para revelar ❤️</div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('modal');
+        const cardContent = document.getElementById('cardContent');
+        const hearts = document.querySelectorAll('.heart');
+        let currentMotivoId = null;
+
+        hearts.forEach(heart => {
+            heart.addEventListener('click', () => {
+                const id = heart.dataset.id;
+                const hasImage = heart.dataset.hasImage === 'true';
+                const viewed = heart.dataset.viewed === 'true';
+                
+                currentMotivoId = id;
+                showModal(id);
+            });
+        });        function showModal(id) {
+            const heart = document.querySelector(`.heart[data-id="${id}"]`);
+            const viewed = heart.dataset.viewed === 'true';
+
+            if (viewed) {
+                // Se já foi visualizado, faz uma requisição POST para obter a mensagem romântica
+                fetch(`/ver-imagem/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Mostra a mensagem romântica em um modal especial
+                    cardContent.innerHTML = `
+                        <div class="momento-unico">
+                            <div class="sparkles">✨</div>
+                            <p class="momento-texto">${data.mensagem}</p>
+                            <div class="sparkles">✨</div>
+                        </div>
+                    `;
+                    modal.classList.add('active');
+                });
+            } else {
+                // Se ainda não foi visualizado, mostra normalmente
+                fetch(`/ver-imagem/${id}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        cardContent.innerHTML = html;
+                        modal.classList.add('active');
+                        initScratch();
+                    });
+            }
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            currentMotivoId = null;
+        }        function initScratch() {
+            const canvas = document.getElementById('scratchCanvas');
+            const ctx = canvas.getContext('2d');
+            const scratchText = document.querySelector('.scratch-text');
+            let isDrawing = false;
+            let lastPoint;
+            let animationFrame;
+
+            function resize() {
+                const rect = canvas.parentElement.getBoundingClientRect();
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+                
+                ctx.fillStyle = 'rgba(255, 75, 110, 0.95)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Adiciona padrão de coração sutil
+                ctx.fillStyle = 'rgba(255, 117, 140, 0.3)';
+                for (let i = 0; i < 10; i++) {
+                    const x = Math.random() * canvas.width;
+                    const y = Math.random() * canvas.height;
+                    const size = Math.random() * 20 + 10;
+                    drawHeart(ctx, x, y, size);
+                }
+            }
+
+            function drawHeart(ctx, x, y, size) {
+                ctx.beginPath();
+                ctx.moveTo(x, y + size / 4);
+                ctx.bezierCurveTo(
+                    x, y, 
+                    x - size / 2, y, 
+                    x - size / 2, y + size / 4
+                );
+                ctx.bezierCurveTo(
+                    x - size / 2, y + size / 2, 
+                    x, y + size * 3/4, 
+                    x, y + size
+                );
+                ctx.bezierCurveTo(
+                    x, y + size * 3/4, 
+                    x + size / 2, y + size / 2, 
+                    x + size / 2, y + size / 4
+                );
+                ctx.bezierCurveTo(
+                    x + size / 2, y, 
+                    x, y, 
+                    x, y + size / 4
+                );
+                ctx.fill();
+            }
+
+            resize();
+            window.addEventListener('resize', resize);
+
+            function getFilledPercentage() {
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const pixels = imageData.data;
+                let transparentPixels = 0;
+                const sampleSize = 32; // Amostragem para melhor performance
+                
+                for (let i = 0; i < pixels.length; i += sampleSize * 4) {
+                    if (pixels[i + 3] < 128) transparentPixels++;
+                }
+
+                return transparentPixels / (pixels.length / (sampleSize * 4));
+            }
+
+            function draw(e) {
+                if (!isDrawing) return;
+                
+                const rect = canvas.getBoundingClientRect();
+                const currentPoint = {
+                    x: (e.type.includes('touch') ? e.touches[0].clientX : e.clientX) - rect.left,
+                    y: (e.type.includes('touch') ? e.touches[0].clientY : e.clientY) - rect.top
+                };
+
+                if (!lastPoint) {
+                    lastPoint = currentPoint;
+                    return;
+                }
+
+                // Efeito de raspagem suave
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.lineWidth = 40;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                
+                ctx.beginPath();
+                ctx.moveTo(lastPoint.x, lastPoint.y);
+                ctx.lineTo(currentPoint.x, currentPoint.y);
+                ctx.stroke();
+
+                // Efeito de partículas
+                ctx.globalCompositeOperation = 'source-over';
+                for (let i = 0; i < 3; i++) {
+                    const particle = {
+                        x: currentPoint.x + (Math.random() - 0.5) * 20,
+                        y: currentPoint.y + (Math.random() - 0.5) * 20,
+                        size: Math.random() * 3 + 1
+                    };
+                    ctx.beginPath();
+                    ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.3})`;
+                    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.globalCompositeOperation = 'destination-out';
+
+                lastPoint = currentPoint;
+
+                // Verifica área raspada com throttling
+                if (!animationFrame) {
+                    animationFrame = requestAnimationFrame(() => {
+                        const percentage = getFilledPercentage();
+                        if (percentage > 0.4) {
+                            canvas.style.opacity = '0';
+                            scratchText.style.opacity = '0';
+                            setTimeout(() => {
+                                canvas.style.display = 'none';
+                                scratchText.style.display = 'none';
+                                
+                                // Marca coração como visualizado
+                                const heart = document.querySelector(`[data-id="${currentMotivoId}"]`);
+                                if (heart) {
+                                    heart.classList.add('viewed');
+                                    heart.dataset.viewed = 'true';
+                                }
+                            }, 300);
+                        }
+                        animationFrame = null;
+                    });
+                }
+            }
+
+            function startDrawing(e) {
+                isDrawing = true;
+                lastPoint = null;
+                if (e.type.includes('touch')) e.preventDefault();
+            }
+
+            function stopDrawing() {
+                isDrawing = false;
+                lastPoint = null;
+            }
+
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseleave', stopDrawing);
+
+            canvas.addEventListener('touchstart', startDrawing, { passive: false });
+            canvas.addEventListener('touchmove', draw, { passive: false });
+            canvas.addEventListener('touchend', stopDrawing);
+        }
+    </script>
+</body>
+</html>

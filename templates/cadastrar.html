@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cartão de Amor ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ff4b6e;
+            --secondary-color: #ff758c;
+            --bg-color: #ffefef;
+            --light-pink: #ffd6e0;
+            --text-color: #333;
+            --border-radius: 20px;
+            --spacing: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: var(--spacing);
+            background: linear-gradient(135deg, var(--bg-color) 0%, var(--light-pink) 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            padding: var(--spacing);
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: var(--spacing);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: var(--spacing);
+            font-size: 1.1rem;
+        }
+
+        .progress {
+            margin-bottom: var(--spacing);
+            text-align: center;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: var(--light-pink);
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-color);
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+
+        .form {
+            margin-top: var(--spacing);
+        }
+
+        .input-group {
+            margin-bottom: var(--spacing);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--light-pink);
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--light-pink);
+            color: var(--text-color);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .file-label:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            background: var(--secondary-color);
+        }
+
+        .flash-messages {
+            margin-bottom: var(--spacing);
+        }
+
+        .flash {
+            padding: 10px;
+            border-radius: 5px;
+            background: var(--light-pink);
+            color: var(--text-color);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: var(--spacing);
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: var(--light-pink);
+            color: var(--text-color);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Cartão de Amor ❤️</h1>
+        <p class="subtitle">Envie uma mensagem especial com todo seu amor!</p>
+
+        <div class="progress">
+            <p>Motivos cadastrados: {{ motivos|length }} de 10</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ "%.0f"|format(100 * motivos|length / 10) }}%"></div>
+            </div>
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <div class="flash">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form class="form" method="POST" enctype="multipart/form-data">
+            <div class="input-group">
+                <textarea name="motivo" placeholder="Digite seu motivo de amor aqui..." required></textarea>
+            </div>
+            <div class="input-group">
+                <input type="file" name="imagem" id="imagem" class="file-input" accept="image/*">
+                <label for="imagem" class="file-label">Adicionar uma foto especial ❤️</label>
+            </div>
+            <button type="submit" class="submit-btn">Enviar com Amor 💝</button>
+        </form>
+
+        <div class="nav-buttons">
+            <a href="{{ url_for('meus_motivos') }}" class="nav-btn">❤️ Ver Motivos</a>
+            <a href="{{ url_for('gerar_qrcode') }}" class="nav-btn">🔗 Gerar QR Code</a>
+        </div>
+    </div>
+</body>
+</html>
