@@ -172,5 +172,5 @@ def ver_imagem(id):
     return render_template("ver_imagem.html", motivo=motivo)
 
 if __name__ == "__main__":
-    init_db()
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Pega a variável PORT ou usa 5000 por padrão
+    app.run(host="0.0.0.0", port=port)
