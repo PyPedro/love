@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Ambiente virtual
+venv/
+env/
+ENV/
+
+# SQLite
+instance/
+*.db
+
+# Arquivos de upload
+static/uploads/*
+!static/uploads/.gitkeep
+
+# VS Code
+.vscode/
+
+# Outros
+*.log
+.DS_Store
